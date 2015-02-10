@@ -1,0 +1,432 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\newcommand{\cutefrac}[2]{{}^{#1\!}\!/{\!}_#2}
+\newcommand{\half}{\cutefrac{1}{2}}
+\newcommand{\cuteddots}{
+\text{
+\raisebox{.6ex}{$\cdot$}\hspace{.75em}%
+\raisebox{.3ex}{$\cdot$}\hspace{.75em}%
+$\cdot$\hspace{.75em}%
+\raisebox{-.3ex}{$\cdot$}\hspace{.75em}%
+\raisebox{-.6ex}{$\cdot$}%
+}}
+
+\graphicspath{{mp/}}
+
+\title{Задание 2}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+Решение задачи
+\[
+\begin{cases}
+p_{tt} = c^2(x) p_{xx}\\
+p\big|_{t = 0} = 0\\
+p_t\big|_{t = 0} = 0\\
+p\big|_{x = 0} = \sin \omega t\\
+p_t + c(1) p_x \big|_{x = 1} = 0
+\end{cases},
+\]
+довольно быстро становится периодическим во времени:
+\begin{equation}
+p = \operatorname{Im} \left[e^{i \omega t} u(x)\right] = 
+\operatorname{Re} u(x) \sin \omega t +
+\operatorname{Im} u(x) \cos \omega t
+\label{eq:harm}
+\end{equation}
+где $u(x)$ --- комплексная амплитуда колебаний в точке $x$.
+
+Подстановкой \eqref{eq:harm} в исходное уравнение, получаем:
+\begin{equation}
+\begin{cases}
+-\omega^2 u = c^2(x) u_{xx}\\
+u(0) = 1\\
+i\omega u(1) + c(1) u_x(1) = 0
+\end{cases}.
+\label{eq:stationary}
+\end{equation}
+При этом начальные условия были отброшены, поскольку мы ищем стационарное
+решение на $t \rightarrow \infty$. Если бы в \eqref{eq:harm} вместо 
+$\operatorname{Im}$ использовалось $\operatorname{Re}$, то это повлияло бы на
+граничное условие для $u(0)$.
+
+Отметим, что \eqref{eq:stationary} можно записать в форме, сходной со
+стационарным уравнением Шрёдингера. Это позволить переносить результаты из
+теории уравнения Шрёдингера непосредственно на нашу задачу:
+\[
+\begin{cases}
+- \Delta u + V(x) u = E u, \qquad V(x) =
+-\dfrac{\omega^2}{c^2(x)}, \quad E = 0\\
+u(0) = 1\\
+u_x(1) = -\dfrac{i\omega}{c(1)} u(1)
+\end{cases}.
+\label{eq:shroedinger}
+\]
+
+Запишем задачу в слабой постановке, интегрируя с функцией $w(x)$:
+\begin{multline}
+0 = \int_0^1 \left[-u_{xx}(x) - \frac{\omega^2}{c^2(x)} u(x)\right] w(x) dx = \\
+=-u_x w\Big|_0^1 + \int_0^1 u_x(x) w_x(x) dx - \omega^2 \int_0^1 \frac{u(x)
+w(x)}{c^2(x)} dx
+\end{multline}
+Далее, следуя уже известной процедуре, разложим $u(x)$ по базису $\psi_i(x)$:
+\[
+u(x) = \sum_{k=0}^N u_k \psi_k(x).
+\]
+Граничное условие в точке $x = 0$ позволяет сразу же определить $u_0 = 1$.
+Это жесткое граничное условие, и, следовательно для проверочной функции $w(x)$ нужно
+поставить граничное условие $w(0) = 0$. Разложение $w(x)$ имеет вид:
+\[
+w(x) = \sum_{j=1}^N w_j \psi_j(x).
+\]
+Из-за линейности, в качестве $w(x)$ достаточно взять все $\psi_j(x),\; j = 1,
+\dots, N$. Подставляя $w(0) = 0, u_x(1) = -\dfrac{i\omega}{c(1)} u(1)$, получаем:
+\begin{multline}
+0 = -u_x w\Big|_0^1 + \int_0^1 u_x(x) w_x(x) dx - \omega^2 \int_0^1
+\frac{u(x)w(x)}{c^2(x)}dx = \\ 
+=
+i\omega \frac{u(1) w(1)}{c(1)}
++ \int_0^1 u_x(x) w_x(x) dx 
+- \omega^2 \int_0^1 \frac{u(x)w(x)}{c^2(x)} dx.
+\end{multline}
+Подставляя вместо функций их разложения по базису, получаем систему линейных
+уравнений:
+\begin{multline}
+i\omega \sum_{k=0}^N u_k \frac{\psi_k(1)\psi_j(1)}{c(1)}
++\sum_{k=0}^N u_k \int_0^1 \psi'_k(x) \psi'_j(x) dx
+-\omega^2 \sum_{k=0}^N u_k \int_0^1 \frac{\psi_k(x) \psi_j(x)}{c^2(x)} dx = \\
+= \sum_{k=0}^N u_k \left(i\omega D_{kj} + K_{kj} -\omega^2 M_{kj}\right) = 0.
+\end{multline}
+Здесь матрицы $K, M$ и $D$ --- те же, что и в задании 1. Исключим из системы
+известное значение $u_0 = 1$:
+\[
+\sum_{k=1}^N u_k \left(i\omega D_{kj} + K_{kj} -\omega^2 M_{kj}\right) =
+\omega^2 M_{0j} - K_{0j} -i\omega D_{0j} \equiv f_j, \qquad j = 1, \dots, N
+\]
+или в матричной форме
+\begin{gather*}
+\mathbf{u}^T \left(-\omega^2 \mathbf{M} + i\omega \mathbf{D} + \mathbf{K}\right) =
+\mathbf{f}^T\\
+\mathbf{M} = 
+\frac{h}{6}
+\begin{pmatrix}
+2\gamma_{\half} + 2\gamma_{\cutefrac{3}{2}} & \gamma_{\cutefrac{3}{2}}\\
+\gamma_{\cutefrac{3}{2}} & 2\gamma_{\cutefrac{3}{2}} + 2\gamma_{\cutefrac{5}{2}} & \gamma_{\cutefrac{5}{2}}\\
+& \cuteddots\; & \cuteddots & \;\cuteddots \\
+& & \gamma_{N - \cutefrac{3}{2}} & 2\gamma_{N - \cutefrac{3}{2}} + 2\gamma_{N
+- \half} & \gamma_{N-\half}\\
+& & & \gamma_{N - \half} & 2\gamma_{N-\half}
+\end{pmatrix}
+\\
+\mathbf{K} = 
+\frac{1}{h}
+\begin{pmatrix}
+2 & -1\\
+-1 & 2 & -1\\
+& \ddots & \ddots & \ddots \\
+& & -1 & 2 & -1\\
+& & & -1 & 1
+\end{pmatrix}\qquad
+\mathbf{D} = 
+\begin{pmatrix}
+0  \\
+& 0 \\
+& & \ddots \\
+& & & 0 \\
+& & & & \frac{1}{c(1)}
+\end{pmatrix}\\
+\mathbf{u}^T = \begin{pmatrix} u_1 & u_2 & \cdots & u_N \end{pmatrix}\\
+\mathbf{f}^T = \begin{pmatrix} \dfrac{\omega^2 h}{6}\gamma_{\half} + \dfrac{1}{h} & 0 & \cdots & 0 \end{pmatrix}
+\end{gather*}
+Для удобства транспонируем систему (матрицы симметричны):
+\[
+\left(-\omega^2 \mathbf{M} + i\omega \mathbf{D} + \mathbf{K}\right)\mathbf{u} =
+\mathbf{f}.\\
+\]
+Данная система является трехдиагональной системой линейных уравнений
+относительно неизвестных $u_1, \dots, u_N$. Коэффициенты матрицы содержат
+комплексные элементы.
+\[
+\begin{pmatrix}
+b_1 & a_2 \\
+a_2 & b_2 & a_3 \\
+& a_3 & b_3 & a_4 \\
+&& \ddots & \ddots & \ddots\\
+&&& a_{N-1} & b_{N-1} & a_N\\
+&&&& a_N & b_N
+\end{pmatrix}
+\begin{pmatrix}
+u_1\\u_2\\u_3\\\vdots\\u_{N-1}\\u_N
+\end{pmatrix} = 
+\begin{pmatrix}
+d_1\\d_2\\d_3\\\vdots\\d_{N-1}\\d_N
+\end{pmatrix}
+\]
+
+\section{Задание}
+
+Численно найти решение системы уравнений методом прогонки или редукции.
+Использовать следующие параметры: 
+\[N = 200,\quad \omega = 5,\quad T = 10,\quad c(x) = 0.1 + 3.6 (x - 0.5)^2\]
+В качестве решения представить графики функций $\operatorname{Re} u(x), \operatorname{Im}
+u(x)$ и функцию $\operatorname{Im}\left[u(x) \exp^{i\omega T}\right]$.
+
+\section{Приближенное решение}
+
+Чтобы получить представление о приближенном решении, воспользуемся из
+результатов теории квазиклассического приближения для уравнение Шрёдингера:
+\[
+\begin{cases}
+-u_{xx} - \omega^2 \frac{1}{c^2(x)} u = 0\\
+u(0) = 1\\
+i \omega u(1) + c(1) u_x(1) = 0
+\end{cases}
+\]
+Этому приближению соответствует случай больших $\omega$ (более конкретно,
+$\omega \gg \max |c_x(x)|$). Представим производную фазы функции $u$ в виде асимптотического
+ряда по степеням $\omega$:
+\begin{gather*}
+u = C \exp \left\{ \int_0^x \Phi(\xi) d\xi \right\}\\
+\Phi(x) = i\omega \sum_{k=0}^\infty (i\omega)^{-k}S_k(x)
+\end{gather*}
+
+Подставляя $u = C e^{\int_0^x \Phi(\xi) d\xi}$ в уравнение, получаем:
+\[
+\Phi'(x) + \Phi^2(x) = -\frac{\omega^2}{c^2(x)}.
+\]
+
+В нулевом приближении $\Phi_0(x) = i\omega S_0(x)$, откуда $S_0(x) =
+\pm\dfrac{1}{c(x)}$.
+
+В первом приближении $\Phi_1(x) = i\omega S_0(x) + S_1(x)$. Приравнивая
+нулю члены порядка $\omega$, получаем
+\[
+i\omega S_0'(x) + 2 i \omega S_0 S_1 = 0 \Rightarrow S_1(x) =
+-\frac{S_0'(x)}{2S_0(x)}
+\]
+
+Подставляя $\Phi_1(x)$ в представление $u$, получаем
+\begin{multline}
+u(x) \approx 
+C \exp{\left\{
+\int_0^x i\omega S_0(\xi) + S_1(\xi) d\xi
+\right\}}
+= C \exp \left\{ \pm\int_0^x \frac{i\omega d\xi}{c(\xi)} -\frac{1}{2} \ln
+\frac{S_0(x)}{S_0(0)} \right\} = \\
+= \frac{C \exp{\left\{
+	\pm\int_0^x \frac{i\omega d\xi} {c(\xi)}
+	\right\}}}{\sqrt{S_0(x)/S_0(0)}} =
+\tilde C \sqrt{\frac{c(x)}{c(0)}} \exp{\left\{\pm \int_0^x \frac{i\omega d\xi}{c(\xi)} \right\}}
+\label{eq:approx}
+\end{multline}
+
+Граничному условию в точке $x=1$ \eqref{eq:approx} удовлетворяет при знаке $+$,
+а константа $C$ равна $1$ в силу условия в точке $x = 0$.
+\[
+u(x) \approx \sqrt\frac{c(x)}{c(0)} \exp\left\{\int_0^x \frac{i\omega
+d\xi}{c(\xi)}\right\}
+\]
+Это решение достаточно хорошо описывает поведение реального решения уже даже при
+$\omega = 5$.
+\section{Метод прогонки}
+
+Будем искать решение в виде прогоночного соотношения $u_n = P_n u_{n+1} + Q_n$. 
+Сравнивая его с первым уравнением 
+\[
+b_1 u_1 + a_2 u_2 = d_1 \Rightarrow u_1 = -\frac{a_2}{b_1} u_2 +
+\frac{d_1}{b_1},
+\]
+получаем значения для $P_1, Q_1$:
+\begin{equation}
+P_1 = -\frac{a_2}{b_1}, \qquad Q_1 = \frac{d_1}{b_1}.
+\label{eq:start}
+\end{equation}
+Подставим соотношение $u_n = P_n u_{n+1} + Q_n$ в уравнение
+\begin{gather*}
+a_{n+1} u_n + b_{n+1} u_{n+1} + a_{n+2} u_{n+2} = d_{n+1}\\
+a_{n+1} P_n u_{n+1} + a_{n+1} Q_n + b_{n+1} u_{n+1} + a_{n+2} u_{n+2} = d_{n+1}\\
+(a_{n+1} P_n + b_{n+1}) u_{n+1} + a_{n+2} u_{n+2} = d_{n+1} - a_{n+1} Q_n\\
+u_{n+1} = -\frac{a_{n+2}}{a_{n+1} P_n + b_{n+1}} u_{n+2} + \frac{d_{n+1} -
+a_{n+1} Q_n}{a_{n+1} P_n + b_{n+1}}
+\end{gather*}
+Отсюда получаем соотношения для перехода от значений $P_n, Q_n$ к значениям
+$P_{n+1}, Q_{n+1}$:
+\begin{equation}
+P_{n+1} = -\frac{a_{n+2}}{a_{n+1} P_n + b_{n+1}} \qquad
+Q_{n+1} = \frac{d_{n+1} - a_{n+1} Q_n}{a_{n+1} P_n + b_{n+1}}
+\label{eq:fwdstep}
+\end{equation}
+Таким способом можно вычислить все значения $P_i, Q_i$ при $i = 1, \dots, N$.
+Рассмотрим последнее соотношение:
+\[
+u_N = P_N u_{N+1} + Q_N.
+\]
+Поскольку из \eqref{eq:fwdstep} получается $P_N = 0$, значение $u_N$ просто равно $Q_N$.
+Теперь можно найти все остальные значения, пользуясь уже известным прогоночным
+соотношением:
+\begin{align}
+&u_N = Q_N\\
+&u_i = P_i u_{i+1} + Q_i, \qquad i = N-1, \dots, 1
+\end{align}
+
+Данный алгоритм существенно последовательный. Коэффициенты $P, Q$ зависят от
+предыдущих, и могут вычисляться только друг за другом. Аналогично, при
+вычислении решения каждое значение зависит от следующего и может вычисляться
+только в обратном порядке.
+
+\section{Метод редукции}
+
+Для удобства будем нумеровать уравнения и неизвестные начиная с 0.
+
+\[
+\begin{pmatrix}
+b_0 & c_0 \\
+a_1 & b_1 & c_1 \\
+& a_2 & b_2 & c_2 \\
+&& \ddots & \ddots & \ddots\\
+&&& a_{N-2} & b_{N-2} & c_{N-2}\\
+&&&& a_{N - 1} & b_{N - 1}
+\end{pmatrix}
+\begin{pmatrix}
+u_0\\u_1\\u_2\\\vdots\\u_{N-2}\\u_{N-1}
+\end{pmatrix} = 
+\begin{pmatrix}
+d_0\\d_1\\d_2\\\vdots\\d_{N-2}\\d_{N-1}
+\end{pmatrix}
+\]
+
+Чтобы использовать данный метод нужно дополнить систему до системы размера
+$K + 1 = 2^k + 1 \geq N > K / 2 + 1$. Для этого можно положить 
+\[a_i = 0,\, b_i = 1,\, c_i = 0,\, d_i = 0, \quad i = N, \dots, K\]
+
+В основе алгоритма лежит процедура исключения из системы каждой нечетной
+неизвестной, при этом размер системы уменьшается вдвое, а сама она остается
+трехдиагональной (каждое уравнение содержит три соседние \emph{четные}
+неизвестные).
+
+Возьмем три последовательных уравнения --- с номерами $2m-1, 2m$ и $2m+1$:
+\[
+\begin{array}{c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}cl}
+a_{2m-1} u_{2m-2} &+& b_{2m-1} u_{2m-1} &+& c_{2m-1} u_{2m} &&&&& = d_{2m-1}\\
+&&a_{2m} u_{2m-1} &+& b_{2m} u_{2m} &+& c_{2m} u_{2m+1} &&& = d_{2m}\\
+&&&&a_{2m+1} u_{2m} &+& b_{2m+1} u_{2m+1} &+& c_{2m+1} u_{2m+2} & = d_{2m+1}
+\end{array}
+\]
+Мы хотим преобразовать их к виду
+\[
+\begin{array}{c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}cl}
+a_{2m-1} u_{2m-2} &+& b_{2m-1} u_{2m-1} &+& c_{2m-1} u_{2m} &&&&& = d_{2m-1}\\
+a'_{2m} u_{2m-2} &&+&& b'_{2m} u_{2m} &&+&& c'_{2m} u_{2m+2} & = d'_{2m}\\
+&&&&a_{2m+1} u_{2m} &+& b_{2m+1} u_{2m+1} &+& c_{2m+1} u_{2m+2} & = d_{2m+1}
+\end{array}
+\]
+Нечетные уравнения оставлены, чтобы была возможность восстановить значения
+нечетных неизвестных. 
+\begin{gather}
+\nonumber
+b'_{2m} = b_{2m} - \frac{a_{2m}c_{2m-1}}{b_{2m-1}} -
+\frac{c_{2m}a_{2m+1}}{b_{2m+1}}\\\label{eq:round}
+d'_{2m} = d_{2m} - \frac{a_{2m}d_{2m-1}}{b_{2m-1}} -
+\frac{c_{2m}d_{2m+1}}{b_{2m+1}}\\\nonumber
+a'_{2m} = -\frac{a_{2m}a_{2m-1}}{b_{2m-1}}\\\nonumber
+c'_{2m} = -\frac{c_{2m}c_{2m+1}}{b_{2m+1}}
+\end{gather}
+
+Предположим, что мы уже проредили неизвестные, оставив только каждую $s=2^p$
+неизвестную. Тогда формулы \eqref{eq:round} преобразуются к виду
+\begin{gather}
+\nonumber
+b'_{2sm} = b_{2sm} - \frac{a_{2sm}c_{2sm-s}}{b_{2sm-s}} -
+\frac{c_{2sm}a_{2sm+s}}{b_{2sm+s}}\\\label{eq:rounds}
+d'_{2sm} = d_{2sm} - \frac{a_{2sm}d_{2sm-s}}{b_{2sm-s}} -
+\frac{c_{2sm}d_{2sm+s}}{b_{2sm+s}}\\\nonumber
+a'_{2sm} = -\frac{a_{2sm}a_{2sm-s}}{b_{2sm-s}}\\\nonumber
+c'_{2sm} = -\frac{c_{2sm}c_{2sm+s}}{b_{2sm+s}}
+\end{gather}
+
+Далее, когда от системы уравнений остается только два уравнения с двумя
+неизвестными, она решается явно:
+\begin{gather*}
+b_0 u_0 + c_K u_K = d_0\\
+a_0 u_0 + b_K u_K = d_K\\
+u_0 = \frac{d_0 b_K - c_K d_K}{b_0 b_K - a_0 c_K}\\
+u_K = \frac{b_0 d_K - a_0 d_0}{b_0 b_K - a_0 c_K}
+\end{gather*}
+
+Теперь $u_{K/2}$ можно найти из уравнения
+\begin{gather*}
+a_{K/2} u_0 + b_{K/2} u_{K/2} + c_{K/2} u_K = d_{K/2}\\
+u_{K/2} = \frac{d_{K/2} - a_{K/2}u_0 - c_{K/2} u_K}{b_{K/2}}
+\end{gather*}
+
+Аналогичным образом, найдя значения неизвестных с шагом $s = 2^p$, пользуясь
+уравнениями с номерами $ms + s/2$ восстанавливаются значения неизвестных с шагом
+$s = 2^{p-1}$.
+
+Алгоритм имеет ту же сложность $O(N)$, что и алгоритм прогонки, однако, в отличие
+от алгоритма прогонки, алгоритм редукции достаточно хорошо параллелится,
+поскольку его основные операции --- одновременное сдваивание коэффициентов и
+одновременное вычисление решения во всех серединах. Этот алгоритм используется
+на массивно-параллельных архитектурах (видеокартах). К тому же, метод более
+устойчив к вычислительным ошибкам, нежели алгоритм прогонки, хотя оба они
+устойчивы, если матрица имеет диагональное преобладание. В нашей задаче
+диагонального преобладания нет.
+
+\floatname{algorithm}{Алгоритм}
+\begin{algorithm}
+\caption{Метод редукции для решения трехдиагональной системы}
+\label{alg:reduct}
+\begin{algorithmic}[1]
+\State $K \Leftarrow 2^{\lceil \log_2 (N-1) \rceil}$
+\For {$j = N,\, N+1,\, \dots, K$}
+	\State $a_j \Leftarrow 0$ \Comment Дополнить матрицу до подходящего размера
+	\State $c_j \Leftarrow 0$
+	\State $d_j \Leftarrow 0$
+	\State $b_j \Leftarrow 1$
+\EndFor
+\For {$s = 1,\, 2,\, 4,\, \dots,\, K/2$}
+	\State $C \Leftarrow -\dfrac{c_0}{b_s}$
+	\Comment Обработать нулевое уравнение отдельно
+	\State $b_0 \Leftarrow b_0 + C a_s$
+	\State $d_0 \Leftarrow d_0 + C d_s$
+	\State $c_0 \Leftarrow C c_s$
+
+	\State $A \Leftarrow -\dfrac{a_K}{b_{K-s}}$
+	\Comment Обработать последнее уравнение отдельно
+	\State $b_K \Leftarrow b_K + A c_{K-s}$
+	\State $d_K \Leftarrow d_K + A d_{K-s}$
+	\State $a_K \Leftarrow A a_{K-s}$
+
+	\For {$j = 2s,\, 4s,\, 6s,\, \dots,\, K - 2s$}
+		\State $A \Leftarrow -\dfrac{a_j}{b_{j-s}}$
+		\State $C \Leftarrow -\dfrac{c_j}{b_{j+s}}$
+		\State $b_j \Leftarrow b_j + A c_{j - s} + C a_{j + s}$ 
+		\State $d_j \Leftarrow d_j + A d_{j - s} + C d_{j + s}$
+		\State $a_j \Leftarrow A a_{j-s}$
+		\State $c_j \Leftarrow C c_{j+s}$
+	\EndFor
+\EndFor
+\State $u_0 = \dfrac{d_0 b_K - c_K d_K}{b_0 b_K - a_0 c_K}$
+\Comment Найти крайние неизвестные из системы $2 \times 2$
+\State $u_K = \dfrac{b_0 d_K - a_0 d_0}{b_0 b_K - a_0 c_K}$
+\For {$s = K/2,\, K/4,\, \dots, 4, 2, 1$}
+	\For {$j = s,\, 3s,\, 5s,\, \dots,\, K - s$}
+		\State $u_j = \dfrac{d_j - a_j u_{j-s} - c_j u_{j+s}}{b_j}$
+	\EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+
+\end{document}
